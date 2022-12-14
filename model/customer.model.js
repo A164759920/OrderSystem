@@ -8,16 +8,15 @@ const seq = require("../database/dishOrder.js");
 const CUSTOMER = seq.define(
   "CUSTOMER",
   {
-    Cno: {
+    Cname: {
       type: DataTypes.STRING, // varchar 255
       primaryKey: true,
       allowNull: false,
     },
-    Cname: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     Cphone: {
+      type: DataTypes.STRING,
+    },
+    Cpwd: {
       type: DataTypes.STRING,
     },
   },

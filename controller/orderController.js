@@ -1,44 +1,88 @@
 // 点餐controller
 
-// 导入数据模型
-const ORDER = require("../model/order.model.js");
-const ORDER_DETAIL = require("../model/orderDetail.model.js");
-const DISH = require("../model/dish.model.js");
-const DISH_TYPE = require("../model/dishType.model.js");
-const CUSTOMER = require("../model/customer.model.js");
+// 导入service层数据服务
+const {
+  addNewOrder,
+  deleteOrder,
+  findAllOrders,
+  findDetailByOno,
+} = require("../service/order.service.js");
 
-/** addOrderController 添加新订单
- * 订单内容如下：
- * - 订单编号 Ono
- * - 顾客编号 Cno
- * - 订单总价 Ototal
- * - dishList
- *  - 菜品名 Dname，菜品数量 Dcount，菜品单价 Dprice
+/**
+ * 添加新订单
  */
 async function addOrderController(ctx) {
-  const { Ono, Cno, Ototal, dishesList } = ctx.request.body;
-  const newOrder = await ORDER.create({
-    Ono,
-    Ototal,
-    Cno,
-  }).then((value) => {
-    console.log(value);
-  });
-  function orderDetailFactory(dishObj) {
-    return new Promise((resolve, reject) => {
-      ORDER_DETAIL.create(dishObj).then(
-        (value) => {
-          resolve(true);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-    });
+  try {
+    const res = await addNewOrder(ctx);
+    if (res) {
+      ctx.body = res;
     }
-    
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[101]系统错误",
+      error,
+    };
+  }
+}
+/**
+ *  删除已有订单
+ */
+async function DeleteOrderController(ctx) {
+  // 解构订单编号
+  const { Ono } = ctx.request.body;
+  try {
+    const res = await deleteOrder(Ono);
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[102]订单删除失败",
+      error,
+    };
+  }
+}
+/**
+ * 获取所有订单信息
+ */
+async function findAllOrderController(ctx) {
+  try {
+    const res = await findAllOrders();
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[103]获取失败",
+    };
+  }
+}
+/**
+ * 获取指定订单细节内容
+ */
+async function findDetailController(ctx) {
+  const { Ono } = ctx.query;
+  console.log("测试测试", Ono);
+  try {
+    const res = await findDetailByOno(Ono);
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[104]系统错误",
+      error,
+    };
+  }
 }
 
 module.exports = {
   addOrderController,
+  DeleteOrderController,
+  findAllOrderController,
+  findDetailController,
 };

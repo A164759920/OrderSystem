@@ -29,7 +29,7 @@ const ORDER_DETAIL = seq.define(
   },
   {
     timestamps: false,
-    tableName: "ordertail",
+    tableName: "orderdetail",
   }
 );
 
