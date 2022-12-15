@@ -87,6 +87,7 @@ async function findAllDishType() {
     };
   }
 }
+
 module.exports = {
   findAllDishes,
   findAllDishType,

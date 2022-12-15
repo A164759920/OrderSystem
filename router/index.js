@@ -8,6 +8,8 @@ const {
   DeleteOrderController,
   findAllOrderController,
   findDetailController,
+  getdishTypeSalesController,
+  getSumCountController,
 } = require("../controller/orderController.js");
 
 // DISH类
@@ -27,10 +29,12 @@ router.post("/OrderAdd", addOrderController);
 router.post("/OrderDelete", DeleteOrderController);
 router.get("/OrderAll", findAllOrderController);
 router.get("/OrderDetail", findDetailController);
+router.get("/OrderSumCount", getSumCountController);
 
 // DISH类 接口
 router.get("/DishAll", findAllDishesController);
 router.get("/DishTypeAll", findAllDishTypeController);
+router.get("/DishTypeSales", getdishTypeSalesController);
 
 // CUSTOMER类 接口
 router.post("/login", loginController);

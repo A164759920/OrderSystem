@@ -6,6 +6,8 @@ const {
   deleteOrder,
   findAllOrders,
   findDetailByOno,
+  getDishTypeSales,
+  getSumCount,
 } = require("../service/order.service.js");
 
 /**
@@ -79,10 +81,45 @@ async function findDetailController(ctx) {
     };
   }
 }
-
+/**
+ *  获取每种菜品的总销量
+ */
+async function getdishTypeSalesController(ctx) {
+  try {
+    const res = await getDishTypeSales();
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[105]系统错误",
+      error,
+    };
+  }
+}
+/**
+ *  获取七日内的营业额数据
+ */
+async function getSumCountController(ctx) {
+  try {
+    const res = await getSumCount();
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[106]系统错误",
+      error,
+    };
+  }
+}
 module.exports = {
   addOrderController,
   DeleteOrderController,
   findAllOrderController,
   findDetailController,
+  getdishTypeSalesController,
+  getSumCountController
 };

@@ -1,3 +1,5 @@
+// 导入原始数据库对象
+const seq = require("../database/dishOrder.js");
 // 导入数据模型
 const ORDER = require("../model/order.model.js");
 const ORDER_DETAIL = require("../model/orderDetail.model.js");
@@ -16,13 +18,13 @@ ORDER_DETAIL.belongsTo(ORDER, {
 /** addNewOrder 添加新订单
  * 订单内容如下：
  * - 订单编号 Ono
- * - 顾客编号 Cno
+ * - 顾客名称 Cname
  * - 订单总价 Ototal
  * - dishList
  *  - 菜品名 Dname，菜品数量 Dcount，菜品单价 Dprice
  */
 async function addNewOrder(ctx) {
-  const { Ono, Cno, Ototal, dishList } = ctx.request.body;
+  const { Ono, Cname, Ototal, dishList } = ctx.request.body;
   function orderDetailFactory(dishObj) {
     return new Promise((resolve, reject) => {
       ORDER_DETAIL.create(dishObj).then(
@@ -51,7 +53,7 @@ async function addNewOrder(ctx) {
     ORDER.create({
       Ono,
       Ototal,
-      Cno,
+      Cname,
     })
   );
   /**
@@ -133,7 +135,9 @@ async function deleteOrder(Ono) {
  */
 async function findAllOrders() {
   try {
-    const res = await ORDER.findAll();
+    const res = await ORDER.findAll({
+      include: ORDER_DETAIL,
+    });
     if (res) {
       console.log(res);
       return {
@@ -178,9 +182,65 @@ async function findDetailByOno(Ono) {
   }
 }
 
+/**
+ * 获取每种菜品的销量
+ */
+async function getDishTypeSales() {
+  try {
+    const res = await seq.query(
+      `SELECT Dname,SUM(Dcount) AS count
+       FROM orderdetail
+       GROUP BY Dname 
+       ORDER BY count DESC`
+    );
+    if (res) {
+      return {
+        code: 0,
+        msg: "获取成功",
+        data: res[0],
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "获取失败",
+      error,
+    };
+  }
+}
+
+/**
+ * 按要求统计营业额
+ */
+async function getSumCount() {
+  try {
+    const res = await seq.query(
+      `SELECT Odate,SUM(Ototal) AS sum
+       FROM orders
+       GROUP BY Odate
+       ORDER BY Odate ASC
+       LIMIT 7`
+    );
+    if (res) {
+      return {
+        code: 0,
+        msg: "获取成功",
+        data: res[0],
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "获取失败",
+      error,
+    };
+  }
+}
 module.exports = {
   addNewOrder,
   deleteOrder,
   findAllOrders,
   findDetailByOno,
+  getDishTypeSales,
+  getSumCount
 };

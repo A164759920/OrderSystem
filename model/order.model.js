@@ -14,14 +14,14 @@ const ORDER = seq.define(
       allowNull: false,
     },
     Odate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     Ototal: {
       type: DataTypes.DOUBLE(16),
       allowNull: false,
     },
-    Cno: {
+    Cname: {
       type: DataTypes.STRING,
       allowNull: false,
     },
