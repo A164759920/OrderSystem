@@ -19,17 +19,20 @@ DISH.belongsTo(DISH_TYPE, {
  */
 async function findAllDishes() {
   let dishType = (await DISH_TYPE.findAll()) || [];
-  const dishData = {};
+  const dishData = [];
   function getDishFactory(Dtype) {
     return new Promise((resolve, reject) => {
       DISH.findAll({
         where: {
           Dtype,
         },
+        order: [['Dprice','ASC']]
       }).then(
         (value) => {
           resolve(value);
-          dishData[Dtype] = value; // 创建字典
+          dishData.push(value)
+          // dishData[Dtype] = value; // 创建字典
+          
         },
         (error) => {
           reject(error);
