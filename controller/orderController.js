@@ -8,6 +8,7 @@ const {
   findDetailByOno,
   getDishTypeSales,
   getSumCount,
+  getDateOrderSum,
 } = require("../service/order.service.js");
 
 /**
@@ -115,11 +116,30 @@ async function getSumCountController(ctx) {
     };
   }
 }
+/**
+ * 获取指定日期的订单数量 默认为当天
+ */
+async function getDateOrderSumController(ctx) {
+  const { date } = ctx.query;
+  try {
+    const res = await getDateOrderSum(date);
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[107]系统错误",
+      error,
+    };
+  }
+}
 module.exports = {
   addOrderController,
   DeleteOrderController,
   findAllOrderController,
   findDetailController,
   getdishTypeSalesController,
-  getSumCountController
+  getSumCountController,
+  getDateOrderSumController,
 };

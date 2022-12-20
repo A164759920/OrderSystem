@@ -10,6 +10,7 @@ const {
   findDetailController,
   getdishTypeSalesController,
   getSumCountController,
+  getDateOrderSumController,
 } = require("../controller/orderController.js");
 
 // DISH类
@@ -30,6 +31,7 @@ router.post("/OrderDelete", DeleteOrderController);
 router.get("/OrderAll", findAllOrderController);
 router.get("/OrderDetail", findDetailController);
 router.get("/OrderSumCount", getSumCountController);
+router.get("/OrderDate", getDateOrderSumController);
 
 // DISH类 接口
 router.get("/DishAll", findAllDishesController);

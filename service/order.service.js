@@ -17,15 +17,16 @@ ORDER_DETAIL.belongsTo(ORDER, {
 
 /** addNewOrder 添加新订单
  * 订单内容如下：
- * - 订单编号 Ono
+ * - 订单编号 Ono (后端生成)
  * - 顾客名称 Cname
  * - 订单总价 Ototal
  * - dishList
  *  - 菜品名 Dname，菜品数量 Dcount，菜品单价 Dprice
  */
 async function addNewOrder(ctx) {
-  const { Ono, Cname, Ototal, dishList } = ctx.request.body;
+  const { Cname, Ototal, dishList } = ctx.request.body;
   function orderDetailFactory(dishObj) {
+    console.log("执行了");
     return new Promise((resolve, reject) => {
       ORDER_DETAIL.create(dishObj).then(
         (value) => {
@@ -37,39 +38,65 @@ async function addNewOrder(ctx) {
       );
     });
   }
-  const newTask = [];
   /**
-   * OrderDetail表的数据
+   * 生成订单任务
    */
-  dishList.forEach((item) => {
-    item.Ono = Ono;
-    console.log("细节数据", item);
-    newTask.push(orderDetailFactory(item));
-  });
-  /**
-   * Order表的数据
-   */
-  newTask.push(
-    ORDER.create({
-      Ono,
-      Ototal,
-      Cname,
-    })
-  );
+  async function createTask() {
+    const date = new Date().toLocaleDateString().split("/").join("");
+    let dateOrderSum = "0";
+    try {
+      const res = await getDateOrderSum();
+      if (res.code === 0) {
+        dateOrderSum = (res.data.length + 1).toString().padStart(3, "0");
+        const Ono = date + dateOrderSum;
+        const newTask = [];
+        /**
+         * OrderDetail表的数据
+         */
+        dishList.forEach((item) => {
+          item.Ono = Ono;
+          console.log("细节数据", item);
+          newTask.push(orderDetailFactory(item));
+        });
+        /**
+         * Order表的数据
+         */
+        newTask.push(
+          ORDER.create({
+            Ono: Ono,
+            Ototal: Ototal,
+            Cname: Cname,
+          })
+        );
+        return newTask;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
   /**
    * 统一写入数据库
    */
   try {
-    const res = await Promise.all(newTask);
-    if (res) {
-      console.log(res);
-      return {
-        code: 0,
-        msg: "订单创建成功",
-      };
+    const taskArray = await createTask();
+    if (taskArray) {
+      try {
+        const res = await Promise.all(taskArray);
+        if (res) {
+          return {
+            code: 0,
+            msg: "订单创建成功",
+          };
+        }
+      } catch (error) {
+        return {
+          code: 1,
+          msg: "订单创建失败",
+          error,
+        };
+      }
     }
   } catch (error) {
-    console.log(error);
     return {
       code: 1,
       msg: "订单创建失败",
@@ -236,11 +263,40 @@ async function getSumCount() {
     };
   }
 }
+
+/**
+ * 获取当天的订单数
+ */
+async function getDateOrderSum(myDate) {
+  const date = new Date().toLocaleDateString().split("/").join("-") || myDate;
+  // console.log(date)
+  try {
+    const res = await ORDER.findAll({
+      where: {
+        Odate: date,
+      },
+    });
+    if (res) {
+      return {
+        code: 0,
+        msg: "获取成功",
+        data: res,
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "获取失败",
+      error,
+    };
+  }
+}
 module.exports = {
   addNewOrder,
   deleteOrder,
   findAllOrders,
   findDetailByOno,
   getDishTypeSales,
-  getSumCount
+  getSumCount,
+  getDateOrderSum,
 };
