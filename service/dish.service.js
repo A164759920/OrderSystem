@@ -1,6 +1,7 @@
 // 导入数据模型
 const DISH = require("../model/dish.model.js");
 const DISH_TYPE = require("../model/dishType.model.js");
+const ORDER = require("../model/order.model.js");
 
 // 定义数据模型间的关联
 DISH_TYPE.hasMany(DISH, {
@@ -26,13 +27,12 @@ async function findAllDishes() {
         where: {
           Dtype,
         },
-        order: [['Dprice','ASC']]
+        order: [["Dprice", "ASC"]],
       }).then(
         (value) => {
           resolve(value);
-          dishData.push(value)
+          dishData.push(value);
           // dishData[Dtype] = value; // 创建字典
-          
         },
         (error) => {
           reject(error);
@@ -90,8 +90,79 @@ async function findAllDishType() {
     };
   }
 }
-
+/**
+ * 删除某种菜品
+ */
+async function deleteDish(Dname) {
+  try {
+    const res = await DISH.destroy({
+      where: {
+        Dname,
+      },
+    });
+    if (res === 1) {
+      return {
+        code: 0,
+        msg: "删除成功",
+      };
+    }
+    if (res === 0) {
+      return {
+        code: 1,
+        msg: "删除失败",
+        error: `菜品${Dname}不存在`,
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "删除失败",
+      error,
+    };
+  }
+}
+/**
+ * 编辑菜品信息
+ * @param {String} Dname
+ * @param {String} fieldKey
+ * @param {String} newData
+ */
+async function editorDish(Dname, fieldKey, newData) {
+  try {
+    const res = await DISH.update(
+      {
+        [fieldKey]: newData,
+      },
+      {
+        where: {
+          Dname,
+        },
+      }
+    );
+    if (res[0] === 1) {
+      return {
+        code: 0,
+        msg: "修改成功",
+        data: newData,
+      };
+    }
+    if (res[0] === 0) {
+      return {
+        code: 1,
+        msg: "修改失败",
+        error: "菜品不存在",
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "修改失败",
+    };
+  }
+}
 module.exports = {
   findAllDishes,
   findAllDishType,
+  deleteDish,
+  editorDish,
 };

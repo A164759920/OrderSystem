@@ -17,6 +17,8 @@ const {
 const {
   findAllDishesController,
   findAllDishTypeController,
+  deleteDishController,
+  editorDishController,
 } = require("../controller/dishController.js");
 
 // CUSTOMER类
@@ -37,6 +39,8 @@ router.get("/OrderDate", getDateOrderSumController);
 router.get("/DishAll", findAllDishesController);
 router.get("/DishTypeAll", findAllDishTypeController);
 router.get("/DishTypeSales", getdishTypeSalesController);
+router.post("/DishDelete", deleteDishController);
+router.post("/DishEditor", editorDishController);
 
 // CUSTOMER类 接口
 router.post("/login", loginController);

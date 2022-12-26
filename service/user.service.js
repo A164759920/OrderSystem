@@ -6,11 +6,12 @@ const CUSTOMER = require("../model/customer.model.js");
  */
 async function register(Cname, Cpwd, Cphone) {
   const isExist = await CUSTOMER.findOne({ where: { Cname } });
+  console.log("标识符",isExist)
   if (isExist) {
     return {
       code: 1,
       msg: "注册失败",
-      error: `用户名${Cno}已存在`,
+      error: `用户名${Cname}已存在`,
     };
   } else {
     //  isExist === null

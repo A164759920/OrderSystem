@@ -7,6 +7,7 @@ async function registerController(ctx) {
   const { Cname, Cpwd, Cphone } = ctx.request.body;
   try {
     const res = await register(Cname, Cpwd, Cphone);
+    console.log("结果",res)
     if (res) {
       ctx.body = res;
     }

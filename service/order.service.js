@@ -26,9 +26,13 @@ ORDER_DETAIL.belongsTo(ORDER, {
 async function addNewOrder(ctx) {
   const { Cname, Ototal, dishList } = ctx.request.body;
   function orderDetailFactory(dishObj) {
-    console.log("执行了");
     return new Promise((resolve, reject) => {
-      ORDER_DETAIL.create(dishObj).then(
+      ORDER_DETAIL.create({
+        Ono: dishObj.Ono,
+        Dname: dishObj.Dname,
+        Dcount: dishObj.Dcount,
+        Dprice: dishObj.Dprice,
+      }).then(
         (value) => {
           resolve(true);
         },
@@ -164,6 +168,7 @@ async function findAllOrders() {
   try {
     const res = await ORDER.findAll({
       include: ORDER_DETAIL,
+      order:[['Odate','DESC']]
     });
     if (res) {
       console.log(res);

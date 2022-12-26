@@ -4,6 +4,8 @@
 const {
   findAllDishes,
   findAllDishType,
+  deleteDish,
+  editorDish,
 } = require("../service/dish.service.js");
 
 async function findAllDishesController(ctx) {
@@ -34,7 +36,41 @@ async function findAllDishTypeController(ctx) {
     };
   }
 }
+
+async function deleteDishController(ctx) {
+  const { Dname } = ctx.request.body;
+  try {
+    const res = await deleteDish(Dname);
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[203]系统错误",
+      error,
+    };
+  }
+}
+
+async function editorDishController(ctx) {
+  const { Dname, fieldKey, newData } = ctx.request.body;
+  try {
+    const res = await editorDish(Dname,fieldKey, newData);
+    if (res) {
+      ctx.body = res;
+    }
+  } catch (error) {
+    ctx.body = {
+      code: 2,
+      msg: "[204]系统错误",
+      error,
+    };
+  }
+}
 module.exports = {
   findAllDishesController,
   findAllDishTypeController,
+  deleteDishController,
+  editorDishController,
 };
