@@ -91,7 +91,43 @@ async function findAllDishType() {
   }
 }
 /**
- * 删除某种菜品
+ * 添加菜品
+ * - dishObj
+ *  - Dname:菜品名
+ *  - Dprice:菜品单价
+ *  - Dtype:菜品分类
+ */
+async function addDish(dishObj) {
+  try {
+    const res = await DISH.create(dishObj);
+    if (res) {
+      return {
+        code: 0,
+        msg: "添加菜品成功",
+        data: dishObj,
+      };
+    }
+  } catch (error) {
+    if (error.errors[0].message === "PRIMARY must be unique") {
+      return {
+        code: 1,
+        msg: "添加菜品失败",
+        error: `菜品[${dishObj.Dname}]已存在`,
+      };
+    } else {
+      return {
+        code: 1,
+        msg: "添加菜品失败",
+        error: {
+          message: error.errors[0].message,
+          type: error.errors[0].type,
+        },
+      };
+    }
+  }
+}
+/**
+ * 删除菜品
  */
 async function deleteDish(Dname) {
   try {
@@ -163,6 +199,7 @@ async function editorDish(Dname, fieldKey, newData) {
 module.exports = {
   findAllDishes,
   findAllDishType,
+  addDish,
   deleteDish,
   editorDish,
 };
