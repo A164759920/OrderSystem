@@ -168,7 +168,7 @@ async function findAllOrders() {
   try {
     const res = await ORDER.findAll({
       include: ORDER_DETAIL,
-      order:[['Odate','DESC']]
+      order: [["Odate", "DESC"]],
     });
     if (res) {
       console.log(res);
@@ -223,9 +223,38 @@ async function getDishTypeSales() {
       `SELECT Dname,SUM(Dcount) AS count
        FROM orderdetail
        GROUP BY Dname 
-       ORDER BY count DESC`
+       ORDER BY count DESC
+       LIMIT 6`
     );
     if (res) {
+      return {
+        code: 0,
+        msg: "获取成功",
+        data: res[0],
+      };
+    }
+  } catch (error) {
+    return {
+      code: 1,
+      msg: "获取失败",
+      error,
+    };
+  }
+}
+/**
+ * 获取Top5菜品分类得销量
+ */
+async function getTopDishType() {
+  try {
+    const res = await seq.query(`
+    SELECT dishes.Dtype AS name,COUNT(Dtype) AS value
+    FROM orderdetail,dishes
+    WHERE orderdetail.Dname = dishes.Dname
+    GROUP BY dishes.Dtype
+    ORDER BY value DESC
+    `);
+    if (res) {
+      console.log("接口测试", res);
       return {
         code: 0,
         msg: "获取成功",
@@ -302,6 +331,7 @@ module.exports = {
   findAllOrders,
   findDetailByOno,
   getDishTypeSales,
+  getTopDishType,
   getSumCount,
   getDateOrderSum,
 };

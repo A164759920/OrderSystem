@@ -9,6 +9,7 @@ const {
   findAllOrderController,
   findDetailController,
   getdishTypeSalesController,
+  getTopDishTypeController,
   getSumCountController,
   getDateOrderSumController,
 } = require("../controller/orderController.js");
@@ -40,6 +41,7 @@ router.get("/OrderDate", getDateOrderSumController);
 router.get("/DishAll", findAllDishesController);
 router.get("/DishTypeAll", findAllDishTypeController);
 router.get("/DishTypeSales", getdishTypeSalesController);
+router.get("/DishTopType", getTopDishTypeController);
 router.post("/DishAdd", addDishController);
 router.post("/DishDelete", deleteDishController);
 router.post("/DishEditor", editorDishController);
