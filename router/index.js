@@ -1,6 +1,9 @@
 const Router = require("koa-router");
 const router = new Router();
 
+// 导入middle
+const { AuthToken } = require("../jwt/authToken.middle.js");
+
 // 导入controller
 // ORDER类
 const {
@@ -30,25 +33,33 @@ const {
 } = require("../controller/userController.js");
 
 // ORDER类 接口
-router.post("/OrderAdd", addOrderController);
-router.post("/OrderDelete", DeleteOrderController);
-router.get("/OrderAll", findAllOrderController);
-router.get("/OrderDetail", findDetailController);
-router.get("/OrderSumCount", getSumCountController);
-router.get("/OrderDate", getDateOrderSumController);
+router.post("/OrderAdd", AuthToken,addOrderController);
+router.post("/OrderDelete",AuthToken, DeleteOrderController);
+router.get("/OrderAll",AuthToken, findAllOrderController);
+router.get("/OrderDetail", AuthToken,findDetailController);
+router.get("/OrderSumCount",AuthToken, getSumCountController);
+router.get("/OrderDate",AuthToken, getDateOrderSumController);
 
 // DISH类 接口
-router.get("/DishAll", findAllDishesController);
-router.get("/DishTypeAll", findAllDishTypeController);
-router.get("/DishTypeSales", getdishTypeSalesController);
-router.get("/DishTopType", getTopDishTypeController);
-router.post("/DishAdd", addDishController);
-router.post("/DishDelete", deleteDishController);
-router.post("/DishEditor", editorDishController);
+router.get("/DishAll", AuthToken, findAllDishesController);
+router.get("/DishTypeAll", AuthToken,findAllDishTypeController);
+router.get("/DishTypeSales", AuthToken,getdishTypeSalesController);
+router.get("/DishTopType", AuthToken,getTopDishTypeController);
+router.post("/DishAdd", AuthToken,addDishController);
+router.post("/DishDelete", AuthToken,deleteDishController);
+router.post("/DishEditor", AuthToken,editorDishController);
 
 // CUSTOMER类 接口
 router.post("/login", loginController);
 router.post("/register", registerController);
+
+// 测试接口
+router.post("/test", (ctx) => {
+  ctx.body = {
+    code: 0,
+    msg: "成功响应",
+  };
+});
 
 module.exports = {
   router,

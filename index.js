@@ -15,7 +15,11 @@ const { router } = require("./router/index");
 const server = new Koa();
 server
   .use(mount(MOUNT_NAME, static(Path.join(__dirname, "./static"))))
-  .use(cors())
+  .use(cors({
+    // credentials: true,
+    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders:['Content-Type', 'Authorization', 'Accept']
+  }))
   .use(
     koaBody({
       multipart: true,

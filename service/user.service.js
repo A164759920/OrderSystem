@@ -1,12 +1,15 @@
 // 导入数据模型
 const CUSTOMER = require("../model/customer.model.js");
 
+// 导入Token
+const { createToken } = require("../jwt/index");
+console.log(createToken);
 /**
  * 新用户注册
  */
 async function register(Cname, Cpwd, Cphone) {
   const isExist = await CUSTOMER.findOne({ where: { Cname } });
-  console.log("标识符",isExist)
+  console.log("标识符", isExist);
   if (isExist) {
     return {
       code: 1,
@@ -51,11 +54,30 @@ async function login(Cname, Cpwd) {
   } else {
     const flag = user.Cpwd === Cpwd ? true : false;
     if (flag) {
-      return {
-        code: 0,
-        msg: "登录成功",
-        // 暂时不用token
-      };
+      // 生成token
+      const token = createToken(
+        {
+          username: Cname,
+          password: Cpwd,
+        },
+        60
+      );
+      console.log("先token", token);
+      if (token) {
+        return {
+          code: 0,
+          msg: "登录成功",
+          token,
+          // 暂时不用token
+        };
+      } else {
+        return {
+          code: 1,
+          msg: "登录失败",
+          error: "token生成失败",
+          // 暂时不用token
+        };
+      }
     } else {
       return {
         code: 1,
