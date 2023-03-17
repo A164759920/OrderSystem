@@ -2,7 +2,7 @@ const Router = require("koa-router");
 const router = new Router();
 
 // 导入middle
-const { AuthToken } = require("../jwt/authToken.middle.js");
+const { AuthToken } = require("../jwt/authToken.middleware.js");
 
 // 导入controller
 // ORDER类

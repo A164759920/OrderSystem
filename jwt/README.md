@@ -9,7 +9,7 @@
 
 - 导出中间件**AuthToken**
 
-## config.local 配置文件
+## config.default 配置文件
 
 - **algorithm**:生成 token 的加密算法类型
 - **secretKey**:用于前面的私钥
