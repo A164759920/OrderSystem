@@ -1,10 +1,30 @@
+/**
+ * @module User-API
+ * @exports User-API
+ */
 // 导入数据模型
 const CUSTOMER = require("../model/customer.model.js");
 
 // 导入Token
 const { createToken } = require("../jwt/index");
 /**
- * 新用户注册
+ * @description 注册接口
+ * @param {String} Cname 用户名
+ * @param {String} Cpwd 密码
+ * @param {String} Cphone 电话号码
+ * @return {object} 返回注册结果
+ * @example 返回示例
+ * 成功:
+ * {
+ *    code:0,
+ *    msg:"注册成功"
+ * }
+ * 失败:
+ * {
+ *    code:1,
+ *    msg:"注册失败",
+ *    error:"用户名已存在"
+ * }
  */
 async function register(Cname, Cpwd, Cphone) {
   const isExist = await CUSTOMER.findOne({ where: { Cname } });
@@ -40,7 +60,17 @@ async function register(Cname, Cpwd, Cphone) {
 }
 
 /**
- * 用户登录
+ * @description 登录接口
+ * @param {String} Cname 用户名
+ * @param {String} Cpwd 密码
+ * @return {Object} 返回登录结果
+ * @example 返回示例
+ * 登录成功:
+ * {
+ *    code:0,
+ *    msg:"登录成功",
+ *    token:用于身份验证的token
+ * }
  */
 async function login(Cname, Cpwd) {
   const user = await CUSTOMER.findOne({ where: { Cname } });

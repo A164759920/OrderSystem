@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "docs-jwt": "jsdoc ./jwt/index.js -c ./jwt/jsdoc.json"
+    "docs": "jsdoc -c ./jsdoc.json"
   },
   "author": "SCY",
   "license": "ISC",

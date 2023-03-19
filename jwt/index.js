@@ -1,5 +1,8 @@
+/**
+ * @module JWT
+ * @exports module:JWT
+ */
 const jwt = require("jsonwebtoken");
-const { reject } = require("lodash");
 
 const {
   algorithm,
