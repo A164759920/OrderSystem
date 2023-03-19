@@ -32,26 +32,32 @@ const {
   registerController,
 } = require("../controller/userController.js");
 
+// 导入TOKEN类
+const { refreshTokenController } = require("../jwt/token.Controller.js");
+
 // ORDER类 接口
-router.post("/OrderAdd", AuthToken,addOrderController);
-router.post("/OrderDelete",AuthToken, DeleteOrderController);
-router.get("/OrderAll",AuthToken, findAllOrderController);
-router.get("/OrderDetail", AuthToken,findDetailController);
-router.get("/OrderSumCount",AuthToken, getSumCountController);
-router.get("/OrderDate",AuthToken, getDateOrderSumController);
+router.post("/OrderAdd", AuthToken, addOrderController);
+router.post("/OrderDelete", AuthToken, DeleteOrderController);
+router.get("/OrderAll", AuthToken, findAllOrderController);
+router.get("/OrderDetail", AuthToken, findDetailController);
+router.get("/OrderSumCount", AuthToken, getSumCountController);
+router.get("/OrderDate", AuthToken, getDateOrderSumController);
 
 // DISH类 接口
 router.get("/DishAll", AuthToken, findAllDishesController);
-router.get("/DishTypeAll", AuthToken,findAllDishTypeController);
-router.get("/DishTypeSales", AuthToken,getdishTypeSalesController);
-router.get("/DishTopType", AuthToken,getTopDishTypeController);
-router.post("/DishAdd", AuthToken,addDishController);
-router.post("/DishDelete", AuthToken,deleteDishController);
-router.post("/DishEditor", AuthToken,editorDishController);
+router.get("/DishTypeAll", AuthToken, findAllDishTypeController);
+router.get("/DishTypeSales", AuthToken, getdishTypeSalesController);
+router.get("/DishTopType", AuthToken, getTopDishTypeController);
+router.post("/DishAdd", AuthToken, addDishController);
+router.post("/DishDelete", AuthToken, deleteDishController);
+router.post("/DishEditor", AuthToken, editorDishController);
 
 // CUSTOMER类 接口
 router.post("/login", loginController);
 router.post("/register", registerController);
+
+// TOKEN接口
+router.post("/refreshToken", AuthToken, refreshTokenController);
 
 // 测试接口
 router.post("/test", (ctx) => {

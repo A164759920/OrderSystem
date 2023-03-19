@@ -3,7 +3,6 @@ const CUSTOMER = require("../model/customer.model.js");
 
 // 导入Token
 const { createToken } = require("../jwt/index");
-console.log(createToken);
 /**
  * 新用户注册
  */
@@ -55,14 +54,10 @@ async function login(Cname, Cpwd) {
     const flag = user.Cpwd === Cpwd ? true : false;
     if (flag) {
       // 生成token
-      const token = createToken(
-        {
-          username: Cname,
-          password: Cpwd,
-        },
-        60
-      );
-      console.log("先token", token);
+      const token = createToken({
+        username: Cname,
+        password: Cpwd,
+      });
       if (token) {
         return {
           code: 0,
